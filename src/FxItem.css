@@ -1,0 +1,38 @@
+.FxItem {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 120px 1fr 240px;
+    margin-top: 8px;
+    box-shadow: 2px 1px 2px rgba(0,0,0,0.2), -1px 1px 2px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.FxItem > div {
+    padding: 16px 24px;
+}
+
+.currency-symbol {
+    border-right: 1px solid rgba(0,0,0,0.4);
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.curency-logo {
+    width: 16px;
+    height: 16px;
+}
+
+.curency-logo > img {
+    width: 100%;
+}
+
+.currency-symbol:hover {
+    background-color: #ededed;
+}
+
+.currency-rate {
+    color: #979797;
+    font-size: 10px;
+}
