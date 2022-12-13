@@ -1,10 +1,12 @@
 import axios from 'axios';
 
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { FxItem } from './FxItem';
+
 import { currencyImgPaths } from './currencyImgPaths';
-import { appConfig } from './appconfig';
+import { appconfig } from './appconfig';
+
+import { FxItem } from './FxItem';
 
 ////
 // TO DO
@@ -12,81 +14,61 @@ import { appConfig } from './appconfig';
 // - Add filter
 ////
 
+function App(props)  {
+  const { currencies } = appconfig;
+  const [baseCurrency, setBaseCurrency] = useState(appconfig.baseCurrency);
+  const [rates, setRates] = useState(appconfig.rates);
+  const [baseAmount, setBaseAmount] = useState(appconfig.baseAmount);
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = appConfig;
-  }
+  useEffect(() => {
+    getRates();
+  });
 
-  
-  componentDidMount() {
-    this.setRates();
-  }
-
-  setRates() {
+  function getRates() {
     axios({
       method: 'get',
       url: 'https://min-api.cryptocompare.com/data/price',
       params: {
-        fsym: this.state.baseCurrency,
-        tsyms: this.state.currencies.join(','),
+        fsym: baseCurrency,
+        tsyms: currencies.join(','),
         api_key: '2ce9fa2c16a10f14e73162f7efff26b2202c902a945d82b1dbe325bd5599fbf9'
       }
     })
     .then(res => {
-      this.setState({
-        rates: res.data
-      });
+      setRates(res.data);
     });
   }
 
-  setBaseCurrency(currency) {
-    this.setState({ baseCurrency: currency }, () => this.setRates());
-  }
-
-  handleInputChange(e) {
-    this.setState({
-      baseAmount: e.target.value
-    });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-           <div className="image-container">
-            <img src={currencyImgPaths[this.state.baseCurrency]} alt={currencyImgPaths[this.state.baseCurrency]} /> 
-          </div>  
-          <div className="input-container">
-            <span>{this.state.baseCurrency}</span>
-            <input type="number" onChange={(e) => this.handleInputChange(e)} defaultValue={1} placeholder="Do something, Padawan!"></input>
-          </div>
-               
-        </header>
-
-        
-        <div className="fx-item-container">
-        {
-          this.state.currencies.map(currency => {
-            if (currency !== this.state.baseCurrency) {
-              return (
-                <FxItem
-                  onClickBaseCurrency = {() => this.setBaseCurrency(currency)}
-                  currencySymbol={currency}
-                  currencyRate={this.state.rates[currency]}
-                  baseAmount={this.state.baseAmount}
-                  key={currency} />
-              )
-            }
-            else return null;
-          })
-        }
-        </div>        
-      </div>
-    );
-  }
-  
+  return (
+    <div className="App">
+      <header className="App-header">
+         <div className="image-container">
+          <img src={currencyImgPaths[baseCurrency]} alt={currencyImgPaths[baseCurrency]} /> 
+        </div>  
+        <div className="input-container">
+          <span>{baseCurrency}</span>
+          <input type="number" onChange={(e) => setBaseAmount(e.target.value)} defaultValue={1} placeholder="Hello, Padawan!"></input>
+        </div>             
+      </header>      
+      <div className="fx-item-container">
+      {
+        currencies.map(currency => {
+          if (currency !== baseCurrency) {
+            return (
+              <FxItem
+                onClickBaseCurrency = {() => setBaseCurrency(currency)}
+                currencySymbol={currency}
+                currencyRate={rates[currency]}
+                baseAmount={baseAmount}
+                key={currency} />
+            )
+          }
+          else return null;
+        })
+      }
+      </div>        
+    </div>
+  );
 }
 
 export default App;
