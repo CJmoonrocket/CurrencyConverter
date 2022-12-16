@@ -22,7 +22,8 @@ function App(props)  {
 
   useEffect(() => {
     getRates();
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[baseCurrency]);
 
   function getRates() {
     axios({
@@ -39,24 +40,29 @@ function App(props)  {
     });
   }
 
+  function updateBaseCurrency(currency) {
+    setBaseCurrency(currency);
+    getRates();
+  }
+
   return (
     <div className="App">
       <header className="App-header">
          <div className="image-container">
-          <img src={currencyImgPaths[baseCurrency]} alt={currencyImgPaths[baseCurrency]} /> 
+          <img src={currencyImgPaths[baseCurrency]} alt={baseCurrency} /> 
         </div>  
         <div className="input-container">
           <span>{baseCurrency}</span>
           <input type="number" onChange={(e) => setBaseAmount(e.target.value)} defaultValue={1} placeholder="Hello, Padawan!"></input>
         </div>             
-      </header>      
+      </header>
       <div className="fx-item-container">
       {
         currencies.map(currency => {
           if (currency !== baseCurrency) {
             return (
               <FxItem
-                onClickBaseCurrency = {() => setBaseCurrency(currency)}
+                onClickBaseCurrency = {() => updateBaseCurrency(currency)}
                 currencySymbol={currency}
                 currencyRate={rates[currency]}
                 baseAmount={baseAmount}
