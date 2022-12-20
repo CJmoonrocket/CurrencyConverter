@@ -10,12 +10,12 @@ import { FxItem } from './FxItem';
 
 ////
 // TO DO
-// - Add missing currencies
-// - Add filter
+// - Improve Filter UI
 ////
 
 function App(props)  {
   const { currencies } = appconfig;
+  const [displayCurrencies, setDisplayCurrencies] = useState(currencies)
   const [baseCurrency, setBaseCurrency] = useState(appconfig.baseCurrency);
   const [rates, setRates] = useState(appconfig.rates);
   const [baseAmount, setBaseAmount] = useState(appconfig.baseAmount);
@@ -42,7 +42,11 @@ function App(props)  {
 
   function updateBaseCurrency(currency) {
     setBaseCurrency(currency);
-    getRates();
+  }
+
+  function handleFilterInputChange(str) {
+    const updatedDisplayCurrencies = currencies.filter(currency => currency.toUpperCase().includes(str.toUpperCase()));
+    setDisplayCurrencies(updatedDisplayCurrencies);
   }
 
   return (
@@ -56,9 +60,14 @@ function App(props)  {
           <input type="number" onChange={(e) => setBaseAmount(e.target.value)} defaultValue={1} placeholder="Hello, Padawan!"></input>
         </div>             
       </header>
+
+      <div>
+        <input type="text" onChange={(e) => handleFilterInputChange(e.target.value)} placeholder="Try typing..."/>
+      </div>
+
       <div className="fx-item-container">
       {
-        currencies.map(currency => {
+        displayCurrencies.map(currency => {
           if (currency !== baseCurrency) {
             return (
               <FxItem
