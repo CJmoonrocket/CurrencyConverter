@@ -1,24 +1,35 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import React, { useState, useEffect } from 'react';
+//Helpers
+import { setCookie, getCookie } from './cookies';
+
+//CSS
 import './App.css';
 
+// Config
 import { currencyImgPaths } from './currencyImgPaths';
 import { appconfig } from './appconfig';
 
+// Components
 import { FxItem } from './FxItem';
+import { SettingsModal } from './SettingsModal';
 
 ////
 // TO DO
-// - Improve Filter UI
+// - Persist settings via cookies
+// - Add more Settings?
 ////
 
 function App(props)  {
   const { currencies } = appconfig;
+
   const [displayCurrencies, setDisplayCurrencies] = useState(currencies)
   const [baseCurrency, setBaseCurrency] = useState(appconfig.baseCurrency);
   const [rates, setRates] = useState(appconfig.rates);
   const [baseAmount, setBaseAmount] = useState(appconfig.baseAmount);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [disabledDenominationAdjustment, setDisabledDenominationAdjustment] = useState(false);
 
   useEffect(() => {
     getRates();
@@ -49,6 +60,14 @@ function App(props)  {
     setDisplayCurrencies(updatedDisplayCurrencies);
   }
 
+  function toggleSettingsModal() {
+    setShowSettingsModal(!showSettingsModal);
+  }
+
+  function toggleDisabledDenominationAdjustment() {
+    setDisabledDenominationAdjustment(!disabledDenominationAdjustment);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -57,12 +76,15 @@ function App(props)  {
         </div>  
         <div className="input-container">
           <span>{baseCurrency}</span>
-          <input type="number" onChange={(e) => setBaseAmount(e.target.value)} defaultValue={1} placeholder="Hello, Padawan!"></input>
-        </div>             
+          <input type="number" onChange={(e) => setBaseAmount(e.target.value)} defaultValue={baseAmount} placeholder="Hello, Padawan!"></input>
+        </div>
+        <div className="settings-button-container image-container">
+          <img src="/settings.png" alt="cogs" onClick={toggleSettingsModal}/>
+        </div>      
       </header>
 
-      <div>
-        <input type="text" onChange={(e) => handleFilterInputChange(e.target.value)} placeholder="Try typing..."/>
+      <div className="search-bar-container">
+        <input type="text" onChange={(e) => handleFilterInputChange(e.target.value)} placeholder="Type to filter" defaultValue={""}/>
       </div>
 
       <div className="fx-item-container">
@@ -75,13 +97,19 @@ function App(props)  {
                 currencySymbol={currency}
                 currencyRate={rates[currency]}
                 baseAmount={baseAmount}
+                disabledDenominationAdjustment={disabledDenominationAdjustment}
                 key={currency} />
             )
           }
           else return null;
         })
       }
-      </div>        
+      </div>
+      <SettingsModal
+        closeModal={() => setShowSettingsModal(false)}
+        disabledDenominationAdjustment={disabledDenominationAdjustment}
+        toggleDisabledDenominationAdjustment={toggleDisabledDenominationAdjustment}
+        showSettingsModal={showSettingsModal} />
     </div>
   );
 }

@@ -8,4 +8,4 @@ export const currencyImgPaths = {
     LTC: '/litecoin.png',
     EUR: '/euro.png',
     BNB: '/bnb.png'
-  }
+  };
