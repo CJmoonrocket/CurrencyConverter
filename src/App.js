@@ -15,11 +15,12 @@ import { appconfig } from './appconfig';
 import { FxItem } from './FxItem';
 import { SettingsModal } from './SettingsModal';
 
-////
+//// !!!!!!!!!!!!!!
 // TO DO
+// - Rewrite markup to table
 // - Persist settings via cookies
 // - Add more Settings?
-////
+//// !!!!!!!!!!!!!!
 
 function App(props)  {
   const { currencies } = appconfig;

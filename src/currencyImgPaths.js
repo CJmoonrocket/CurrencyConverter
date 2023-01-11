@@ -7,5 +7,7 @@ export const currencyImgPaths = {
     USDT: '/tether.png',
     LTC: '/litecoin.png',
     EUR: '/euro.png',
-    BNB: '/bnb.png'
+    BNB: '/bnb.png',
+    DOGE: '/doge.png',
+    BCH: '/bch.png'
   };
