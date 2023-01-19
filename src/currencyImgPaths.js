@@ -10,5 +10,6 @@ export const currencyImgPaths = {
     BNB: '/bnb.png',
     DOGE: '/doge.png',
     BCH: '/bch.png',
-    JPY: '/jpy.png'
+    JPY: '/jpy.png',
+    DAI: '/dai.png'
   };
